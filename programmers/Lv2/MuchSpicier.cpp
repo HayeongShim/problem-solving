@@ -1,27 +1,29 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <queue>
 #include <iostream>
 
 using namespace std;
 
 int solution(vector<int> scoville, int K) {
     int answer = 0;
-    int newComp = 0;
+    int elem1, elem2, newComp;
     
-    sort(scoville.begin(), scoville.end());
+    priority_queue<int, vector<int>, greater<int>> pq;
+    for (int i = 0; i < scoville.size(); i++) {
+        pq.push(scoville[i]);
+    }
     
-    while (scoville[0] < K && scoville.size() > 1) {
-        newComp = scoville[0] + scoville[1] * 2;
-        scoville[1] = newComp;
+    while (pq.top() < K && pq.size() > 1) {
+        elem1 = pq.top(); pq.pop();
+        elem2 = pq.top(); pq.pop();
         
-        scoville.erase(scoville.begin());
-        
-        sort(scoville.begin(), scoville.end());
+        newComp = elem1 + elem2 * 2;
+        pq.push(newComp);
         answer++;
     }
 
-    if (scoville.size() == 1 && scoville[0] < K) answer = -1;
+    if (pq.size() == 1 && pq.top() < K) answer = -1;
     
     return answer;
 }
